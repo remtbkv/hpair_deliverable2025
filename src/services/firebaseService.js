@@ -1,6 +1,7 @@
 // Firebase service for form submissions
 import { collection, addDoc, getDocs, query, orderBy, limit } from 'firebase/firestore';
 import { db } from '../firebase/config';
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 
 const COLLECTION_NAME = 'formSubmissions';
 
@@ -77,6 +78,39 @@ export const getSubmissionCount = async () => {
   }
 };
 
+// Upload a file to Firebase Storage and return the download URL
+export const uploadFile = async (file, destinationPath, onProgress) => {
+  try {
+    const storage = getStorage();
+    const storageRef = ref(storage, destinationPath);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    return await new Promise((resolve, reject) => {
+      uploadTask.on(
+        'state_changed',
+        (snapshot) => {
+          const percent = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+          if (onProgress) onProgress(percent);
+        },
+        (error) => {
+          reject(error);
+        },
+        async () => {
+          try {
+            const url = await getDownloadURL(uploadTask.snapshot.ref);
+            resolve(url);
+          } catch (err) {
+            reject(err);
+          }
+        }
+      );
+    });
+  } catch (error) {
+    console.error('Error uploading file:', error);
+    throw error;
+  }
+};
+
 const firebaseService = {
   submitForm,
   getFormSubmissions,
@@ -84,3 +118,4 @@ const firebaseService = {
 };
 
 export default firebaseService;
+

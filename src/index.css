@@ -147,6 +147,18 @@ code {
   box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 
+/* error highlight: gentle light red background and border */
+.form-input.has-error,
+select.has-error {
+  border-color: #f5c6cb;
+  background-color: #fff5f6;
+}
+
+.file-upload-area.has-error {
+  border-color: #f5c6cb;
+  background-color: #fff5f6;
+}
+
 .form-error {
   color: #dc3545;
   font-size: 14px;
@@ -337,4 +349,17 @@ code {
     flex-direction: column;
     gap: 10px;
   }
+}
+
+/* screen-reader only helper */
+.sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
 }

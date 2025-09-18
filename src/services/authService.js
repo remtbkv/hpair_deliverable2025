@@ -84,10 +84,12 @@ const getErrorMessage = (errorCode) => {
   }
 };
 
-export default {
+const AuthService = {
   registerUser,
   signInUser,
   signOutUser,
   onAuthStateChange,
   getCurrentUser
 };
+
+export default AuthService;
